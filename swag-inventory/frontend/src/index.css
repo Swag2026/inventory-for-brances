@@ -1,0 +1,91 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ===== Odoo 17/18 design tokens ===== */
+:root {
+  --bg: #F9FAFB; --surface: #FFFFFF; --surface2: #F3F4F6; --surface3: #E7E9ED;
+  --border: #E7E9ED; --border2: #D8DADD; --text: #374151; --muted: #6B7280; --muted2: #4B5563;
+  --primary: #714B67; --primary2: #5E3F56; --link: #017E84;
+  --green: #28A745; --red: #D44C59; --amber: #E99D00; --blue: #3B82C4;
+  color-scheme: light;
+}
+.dark {
+  --bg: #1E2029; --surface: #262A36; --surface2: #2E3240; --surface3: #3A3F50;
+  --border: #3A3F50; --border2: #4A5065; --text: #E4E6EB; --muted: #9AA0AE; --muted2: #C0C5D0;
+  --primary: #A3779B; --primary2: #8C6585; --link: #01A9B0;
+  --green: #3DBE5A; --red: #E06C77; --amber: #F0B429; --blue: #6CA8DE;
+  color-scheme: dark;
+}
+
+@layer base {
+  html, body { @apply bg-bg text-ink font-sans; font-size: 14px; }
+  body::before, body::after { content: ''; position: fixed; width: 600px; height: 600px; pointer-events: none; z-index: 0; }
+  body::before { top: -220px; left: -220px; background: radial-gradient(circle, rgba(113,75,103,.08), transparent 70%); }
+  body::after { bottom: -220px; right: -220px; background: radial-gradient(circle, rgba(1,126,132,.07), transparent 70%); }
+  #root { position: relative; z-index: 1; }
+  ::selection { background: rgba(113,75,103,.2); }
+  input[type=number]::-webkit-inner-spin-button { opacity: .5; }
+}
+
+@layer components {
+  /* buttons */
+  .o-btn { @apply inline-flex items-center justify-center gap-1.5 rounded-[5px] px-3.5 py-1.5 text-sm font-medium
+           whitespace-nowrap select-none transition duration-150 hover:-translate-y-px
+           disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0; }
+  .o-btn-primary { @apply o-btn bg-primary text-white hover:bg-primary2; }
+  .o-btn-secondary { @apply o-btn bg-surface3 text-ink hover:bg-line2; }
+  .o-btn-danger { @apply o-btn bg-bad text-white hover:opacity-90; }
+  .o-btn-link { @apply inline-flex items-center gap-1 rounded px-1.5 py-1 text-[13px] font-medium text-link hover:bg-surface2; }
+  .o-icon-btn { @apply inline-flex h-[46px] items-center justify-center px-2.5 text-ink hover:bg-surface2 transition-colors; }
+
+  /* inputs */
+  .o-input { @apply w-full rounded-[5px] border border-line2 bg-surface px-2.5 py-1.5 text-sm text-ink outline-none transition
+             placeholder:text-muted focus:border-primary focus:ring-2 focus:ring-[rgba(113,75,103,.15)]; }
+  .o-field { @apply w-full border-0 border-b border-line2 bg-transparent px-0.5 py-1.5 text-sm text-ink outline-none transition
+             placeholder:text-muted focus:border-primary; }
+  .o-label { @apply mb-0.5 block text-sm font-bold text-ink; }
+  .o-flabel { @apply mb-1 block text-xs font-medium text-muted2; }
+
+  /* surfaces */
+  .o-card { @apply rounded-md border border-line2 bg-surface; }
+  .o-lift { @apply transition duration-200 hover:-translate-y-1 hover:shadow-[0_6px_16px_rgba(0,0,0,.10)]; }
+
+  /* navbar menu */
+  .o-menu { @apply flex h-full shrink-0 items-center gap-1.5 px-3 text-sm text-ink transition-colors hover:bg-surface2; }
+  .o-menu.active { @apply bg-surface3 font-medium; }
+
+  /* list view */
+  .o-table { @apply w-full min-w-[640px] border-collapse text-[13.5px]; }
+  .o-table th { @apply whitespace-nowrap border-b border-line2 bg-surface px-3 py-2.5 text-start text-[13px] font-bold text-ink; }
+  .o-table td { @apply border-t border-line px-3 py-2 align-middle text-ink; }
+  .o-table tbody tr { @apply transition-colors hover:bg-surface2; }
+
+  /* badges */
+  .o-badge { @apply inline-flex items-center whitespace-nowrap rounded-full px-2.5 py-0.5 text-xs font-medium; }
+  .b-use   { background: rgba(40,167,69,.14);  color: #1E7B34; }
+  .b-stop  { background: rgba(212,76,89,.14);  color: #B02A37; }
+  .b-fix   { background: rgba(233,157,0,.16);  color: #9A6700; }
+  .b-store { background: rgba(59,130,196,.15); color: #2B6CB0; }
+  .b-avail { background: rgba(1,126,132,.14);  color: #017E84; }
+  .b-def   { @apply bg-surface3 text-muted2; }
+  .dark .b-use { color: #6FDC8C } .dark .b-stop { color: #F19BA3 } .dark .b-fix { color: #F5C55B }
+  .dark .b-store { color: #8FBCE6 } .dark .b-avail { color: #4FD1D7 }
+}
+
+/* login button glow lines + magnet particles */
+.login-btn { position: relative; overflow: visible; }
+.login-btn::before, .login-btn::after { content: ''; position: absolute; left: 0; right: 0; height: 1px; width: 75%; margin: 0 auto;
+  background: linear-gradient(to right, transparent, rgba(255,255,255,.9), transparent); opacity: 0; transition: opacity .5s; pointer-events: none; }
+.login-btn::before { top: 0 } .login-btn::after { bottom: 0 }
+.login-btn:hover::before { opacity: 1 } .login-btn:hover::after { opacity: .35 }
+.magnet-p { position: absolute; left: 50%; top: 50%; width: 6px; height: 6px; margin: -3px 0 0 -3px; border-radius: 50%;
+  pointer-events: none; opacity: .35; transition: transform .65s cubic-bezier(.34,1.56,.64,1), opacity .4s; }
+.magnet-on .magnet-p { opacity: 1 }
+
+.no-scrollbar { scrollbar-width: none } .no-scrollbar::-webkit-scrollbar { display: none }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+@media print { header, .no-print { display: none !important } }
