@@ -1,6 +1,11 @@
 import os
 
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./inventory.db")
+# Railway / Heroku give postgres:// or postgresql:// — use the psycopg 3 driver we ship
+if DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = "postgresql+psycopg://" + DATABASE_URL[len("postgres://"):]
+elif DATABASE_URL.startswith("postgresql://"):
+    DATABASE_URL = "postgresql+psycopg://" + DATABASE_URL[len("postgresql://"):]
 SECRET_KEY = os.getenv("SECRET_KEY", "change-this-secret-in-production")
 TOKEN_HOURS = int(os.getenv("TOKEN_HOURS", "12"))
 
