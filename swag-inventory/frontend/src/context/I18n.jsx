@@ -53,7 +53,7 @@ const en = {
   roleDesc_viewer: 'Read-only in assigned branches; can request transfers.',
   branchesAccess: 'Branch access', allBranchesAccess: 'All branches', noBranches: 'No branches',
   noBranchesWarn: 'With no branch selected this user will see nothing.', active: 'Active', inactive: 'Disabled',
-  activeDesc: 'Account active (untick to block sign-in)', resetPassword: 'New password', keepPassword: 'Leave empty to keep the current password',
+  activeDesc: 'Turn off to block this user from signing in', darkMode: 'Dark mode', allBranchesHint: 'Also includes branches added later', resetPassword: 'New password', keepPassword: 'Leave empty to keep the current password',
   userCreated: 'User created', deleteUserQ: 'Delete this user?', min6: 'At least 6 characters',
   // settings
   manageBranches: 'Branches', branchName: 'Branch name', brandName: 'Brand', branchHint: 'Branches appear in every dropdown. A branch with assets cannot be deleted.',
@@ -106,7 +106,7 @@ const ar = {
   roleDesc_viewer: 'عرض فقط في الفروع المحددة، ويمكنه طلب النقل.',
   branchesAccess: 'صلاحية الفروع', allBranchesAccess: 'كل الفروع', noBranches: 'بدون فروع',
   noBranchesWarn: 'بدون اختيار فرع لن يرى هذا المستخدم أي شيء.', active: 'نشط', inactive: 'معطّل',
-  activeDesc: 'الحساب نشط (أزل التحديد لمنع الدخول)', resetPassword: 'كلمة مرور جديدة', keepPassword: 'اتركه فارغاً للإبقاء على كلمة المرور الحالية',
+  activeDesc: 'أوقفه لمنع هذا المستخدم من الدخول', darkMode: 'الوضع الداكن', allBranchesHint: 'يشمل أيضاً الفروع التي تضاف لاحقاً', resetPassword: 'كلمة مرور جديدة', keepPassword: 'اتركه فارغاً للإبقاء على كلمة المرور الحالية',
   userCreated: 'تم إنشاء المستخدم', deleteUserQ: 'حذف هذا المستخدم؟', min6: '6 أحرف على الأقل',
   manageBranches: 'الفروع', branchName: 'اسم الفرع', brandName: 'العلامة', branchHint: 'تظهر الفروع في كل القوائم. لا يمكن حذف فرع يحتوي على أصول.',
   manageChoices: 'خيارات القوائم', choiceHint: 'الخيارات التي تظهر عند إضافة أو تعديل أصل.', addOption: 'خيار جديد…',

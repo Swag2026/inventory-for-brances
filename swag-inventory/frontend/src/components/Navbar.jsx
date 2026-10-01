@@ -6,6 +6,7 @@ import { useData } from '../context/Data'
 import { useI18n } from '../context/I18n'
 import { useTheme } from '../context/Theme'
 import { useUI } from '../context/UI'
+import { SwitchField } from './ui/switch'
 
 export default function Navbar() {
   const { t, lang, toggleLang } = useI18n()
@@ -87,6 +88,8 @@ export default function Navbar() {
                   <div className="truncate text-xs text-muted">{user.email}</div>
                   <span className="o-badge b-avail mt-1.5">{roleLabel}</span>
                 </div>
+                <SwitchField className="px-4 py-2.5" label={<span><i className={`fa ${dark ? 'fa-moon-o' : 'fa-sun-o'} me-2 w-4 text-muted`} />{t('darkMode')}</span>} checked={dark} onCheckedChange={toggle} />
+                <SwitchField className="border-b border-line px-4 pb-2.5" label={<span><i className="fa fa-language me-2 w-4 text-muted" />العربية</span>} checked={lang === 'ar'} onCheckedChange={toggleLang} />
                 <button className="flex w-full items-center gap-2.5 px-4 py-2 text-start text-sm hover:bg-surface2" onClick={() => { setOpen(null); ui.openPassword() }}><i className="fa fa-key w-4 text-muted" /> {t('changePassword')}</button>
                 <button className="flex w-full items-center gap-2.5 px-4 py-2 text-start text-sm hover:bg-surface2" onClick={logout}><i className="fa fa-sign-out w-4 text-muted" /> {t('signout')}</button>
               </div>

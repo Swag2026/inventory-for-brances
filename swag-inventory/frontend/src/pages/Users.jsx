@@ -7,6 +7,7 @@ import { useToast } from '../context/Toast'
 import { useUI } from '../context/UI'
 import { api } from '../lib/api'
 import { fmtDate } from '../lib/utils'
+import { Switch, SwitchField } from '../components/ui/switch'
 
 const ROLE_BADGE = { admin: 'b-stop', editor: 'b-avail', viewer: 'b-def' }
 
@@ -135,17 +136,16 @@ function UserModal({ u, me, branches, onClose, onSaved }) {
 
       {f.role !== 'admin' && (
         <div className="mt-5">
-          <div className="flex items-center justify-between">
-            <span className="o-label">{t('branchesAccess')}</span>
-            <label className="flex cursor-pointer items-center gap-2 text-sm">
-              <input type="checkbox" className="accent-[var(--primary)]" checked={f.all_branches} onChange={(e) => set('all_branches', e.target.checked)} /> {t('allBranchesAccess')}
-            </label>
-          </div>
+          <span className="o-label">{t('branchesAccess')}</span>
+          <SwitchField className="mt-2 rounded-md border border-line px-3 py-2.5" label={t('allBranchesAccess')} hint={t('allBranchesHint')}
+            checked={f.all_branches} onCheckedChange={(v) => set('all_branches', v)} />
           {!f.all_branches && (
             <div className="mt-2 grid max-h-56 gap-1 overflow-y-auto rounded-md border border-line p-2 sm:grid-cols-2">
               {branches.map((b) => (
-                <label key={b.id} className={`flex cursor-pointer items-center gap-2 rounded px-2 py-1.5 text-sm hover:bg-surface2 ${f.branch_ids.includes(b.id) ? 'font-medium text-primary' : ''}`}>
-                  <input type="checkbox" className="accent-[var(--primary)]" checked={f.branch_ids.includes(b.id)} onChange={() => toggleB(b.id)} /> {b.name}
+                <label key={b.id} className={`flex cursor-pointer items-center justify-between gap-2 rounded px-2 py-1.5 text-sm transition-colors hover:bg-surface2 ${f.branch_ids.includes(b.id) ? 'font-medium text-primary' : ''}`}>
+                  <span className="truncate">{b.name}</span>
+                  <Switch className="h-5 w-9 [&>span]:h-4 [&>span]:w-4 [&>span[data-state=checked]]:translate-x-4 rtl:[&>span[data-state=checked]]:-translate-x-4"
+                    checked={f.branch_ids.includes(b.id)} onCheckedChange={() => toggleB(b.id)} />
                 </label>
               ))}
             </div>
@@ -155,9 +155,8 @@ function UserModal({ u, me, branches, onClose, onSaved }) {
       )}
 
       {!self && (
-        <label className="mt-5 flex cursor-pointer items-center gap-2 text-sm">
-          <input type="checkbox" className="accent-[var(--primary)]" checked={f.is_active} onChange={(e) => set('is_active', e.target.checked)} /> {t('activeDesc')}
-        </label>
+        <SwitchField className="mt-5 rounded-md border border-line px-3 py-2.5" label={f.is_active ? t('active') : t('inactive')} hint={t('activeDesc')}
+          checked={f.is_active} onCheckedChange={(v) => set('is_active', v)} />
       )}
     </Modal>
   )

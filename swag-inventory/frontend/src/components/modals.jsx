@@ -7,6 +7,7 @@ import { useToast } from '../context/Toast'
 import { api, fileUrl } from '../lib/api'
 import { colorHex, compressImage, esc, fmtDate, fmtDateTime, fmtMoney, printHtml } from '../lib/utils'
 import { AssetPhoto, Lightbox, Modal, Spinner, StatusBadge } from './ui'
+import { Dropdown } from './ui/dropdown'
 
 export const qrPayload = (id) => `${window.location.origin}/a/${id}`
 
@@ -120,6 +121,7 @@ export function AssetFormModal({ asset, defaults, onClose }) {
   const [saving, setSaving] = useState(false)
   const fileInput = useRef(null), camInput = useRef(null)
   const set = (k) => (e) => setF((x) => ({ ...x, [k]: e.target.value }))
+  const setV = (k) => (v) => setF((x) => ({ ...x, [k]: v }))
   const opts = (list, cur) => [...new Set([...(cur ? [cur] : []), ...list])]
 
   const pick = async (e) => {
@@ -159,25 +161,15 @@ export function AssetFormModal({ asset, defaults, onClose }) {
       <div className="grid gap-x-6 gap-y-4 md:grid-cols-2">
         <div className="md:col-span-2">{Field({ label: t('name'), req: true, children: <input className="o-field text-lg" value={f.name} onChange={set('name')} placeholder={t('namePh')} autoFocus /> })}</div>
         {Field({ label: t('branch'), req: true, children: (
-          <select className="o-field" value={f.branch_id} onChange={set('branch_id')}>
-            <option value="">{t('select')}</option>
-            {editableBranches.map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}
-          </select>) })}
+          <Dropdown variant="field" value={f.branch_id} onChange={setV('branch_id')} placeholder={t('select')}
+            options={editableBranches.map((b) => ({ value: b.id, label: b.name }))} />) })}
         {Field({ label: t('category'), req: true, children: (
-          <select className="o-field" value={f.category} onChange={set('category')}>
-            <option value="">{t('select')}</option>
-            {opts(choices.category, f.category).map((c) => <option key={c}>{c}</option>)}
-          </select>) })}
+          <Dropdown variant="field" value={f.category} onChange={setV('category')} placeholder={t('select')} options={opts(choices.category, f.category)} />) })}
         {Field({ label: t('status'), children: (
-          <select className="o-field" value={f.status} onChange={set('status')}>
-            <option value="">—</option>
-            {opts(choices.status, f.status).map((c) => <option key={c}>{c}</option>)}
-          </select>) })}
+          <Dropdown variant="field" value={f.status} onChange={setV('status')} emptyLabel="—" placeholder="—" options={opts(choices.status, f.status)} />) })}
         {Field({ label: t('color'), children: (
-          <select className="o-field" value={f.color} onChange={set('color')}>
-            <option value="">—</option>
-            {opts(choices.color, f.color).map((c) => <option key={c}>{c}</option>)}
-          </select>) })}
+          <Dropdown variant="field" value={f.color} onChange={setV('color')} emptyLabel="—" placeholder="—"
+            options={opts(choices.color, f.color).map((c) => ({ value: c, label: <span className="inline-flex items-center gap-2"><span className="h-3 w-3 rounded-full border border-line2" style={{ background: colorHex(c) }} />{c}</span> }))} />) })}
         {Field({ label: t('model'), children: <input className="o-field" value={f.model} onChange={set('model')} /> })}
         {Field({ label: t('qty'), req: true, children: <input className="o-field" type="number" min="1" value={f.qty} onChange={set('qty')} /> })}
         {Field({ label: t('serial'), children: <input className="o-field" value={f.serial_number} onChange={set('serial_number')} /> })}
@@ -280,9 +272,7 @@ export function RequestModal({ asset, onClose }) {
       <div className="mb-4 font-medium">{asset.name} <span className="text-sm text-muted">— {asset.branch} (×{asset.qty})</span></div>
       {targets.length === 0 ? <div className="text-sm text-muted">{t('noTargetBranch')}</div> : <>
         <label className="o-label">{t('toBranch')}</label>
-        <select className="o-field mb-4" value={to} onChange={(e) => setTo(e.target.value)}>
-          {targets.map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}
-        </select>
+        <Dropdown variant="field" className="mb-4" value={to} onChange={setTo} options={targets.map((b) => ({ value: b.id, label: b.name }))} />
         <label className="o-label">{t('note')}</label>
         <textarea className="o-input mt-1 h-20 resize-none" value={note} onChange={(e) => setNote(e.target.value)} />
       </>}

@@ -4,13 +4,14 @@ import { useSearchParams } from 'react-router-dom'
 import { AssetCard } from '../components/cards'
 import { qrPayload } from '../components/modals'
 import { AssetPhoto, CatChip, ControlPanel, Empty, Pager, StatusBadge } from '../components/ui'
+import { Dropdown } from '../components/ui/dropdown'
 import { useData } from '../context/Data'
 import { useI18n } from '../context/I18n'
 import { useToast } from '../context/Toast'
 import { useUI } from '../context/UI'
 import { api } from '../lib/api'
 import { exportAssets, parseImportFile } from '../lib/excel'
-import { catColor, colorHex, esc, fmtMoney, printHtml, statusKind } from '../lib/utils'
+import { catColor, colorHex, esc, fmtMoney, printHtml, STATUS_HEX, statusKind } from '../lib/utils'
 
 const PAGE = 40
 const BLANK = { q: '', branch: '', cat: '', status: '', from: '', to: '', min: '', max: '', color: '' }
@@ -40,6 +41,7 @@ export default function Assets() {
   useEffect(() => { try { localStorage.setItem('inv_view', view) } catch (_) {} }, [view])
 
   const set = (k) => (e) => { setF((x) => ({ ...x, [k]: e.target.value })); setPage(1) }
+  const setV = (k) => (v) => { setF((x) => ({ ...x, [k]: v })); setPage(1) }
   const rows = useMemo(() => {
     let r = assets
     const q = f.q.toLowerCase().trim()
@@ -104,18 +106,12 @@ export default function Assets() {
               <i className="fa fa-search absolute start-2.5 top-1/2 -translate-y-1/2 text-xs text-muted" />
               <input className="o-input !ps-7" placeholder={t('searchAssets')} value={f.q} onChange={set('q')} />
             </div>
-            <select className="o-input !w-auto" value={f.branch} onChange={set('branch')}>
-              <option value="">{t('allBranches')}</option>
-              {myBranches.map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}
-            </select>
-            <select className="o-input !w-auto" value={f.cat} onChange={set('cat')}>
-              <option value="">{t('allCategories')}</option>
-              {[...new Set([...choices.category, ...assets.map((d) => d.category)])].filter(Boolean).map((c) => <option key={c}>{c}</option>)}
-            </select>
-            <select className="o-input !w-auto" value={f.status} onChange={set('status')}>
-              <option value="">{t('allStatus')}</option>
-              {['use', 'avail', 'store', 'fix', 'stop'].map((k) => <option key={k} value={k}>{t('st_' + k)}</option>)}
-            </select>
+            <Dropdown className="w-44" value={f.branch} onChange={setV('branch')} emptyLabel={t('allBranches')}
+              options={myBranches.map((b) => ({ value: b.id, label: b.name }))} />
+            <Dropdown className="w-40" value={f.cat} onChange={setV('cat')} emptyLabel={t('allCategories')}
+              options={[...new Set([...choices.category, ...assets.map((d) => d.category)])].filter(Boolean)} />
+            <Dropdown className="w-44" value={f.status} onChange={setV('status')} emptyLabel={t('allStatus')}
+              options={['use', 'avail', 'store', 'fix', 'stop'].map((k) => ({ value: k, label: <span className="inline-flex items-center gap-2"><span className={`h-2 w-2 rounded-full`} style={{ background: STATUS_HEX[k] }} />{t('st_' + k)}</span> }))} />
             <button className={`o-btn-secondary ${adv ? '!bg-line2' : ''}`} onClick={() => setAdv(!adv)}><i className="fa fa-filter" /> {t('advFilters')}{activeFilters > 0 && <span className="rounded-full bg-primary px-1.5 text-[10px] text-white">{activeFilters}</span>}</button>
             {(activeFilters > 0 || f.q) && <button className="o-btn-link" onClick={() => { setF(BLANK); setPage(1) }}><i className="fa fa-times" /> {t('clear')}</button>}
             <div className="ms-auto flex items-center gap-2">
@@ -133,7 +129,8 @@ export default function Assets() {
                 <label><span className="o-flabel">{t('amtMin')}</span><input type="number" className="o-input" value={f.min} onChange={set('min')} placeholder="0" /></label>
                 <label><span className="o-flabel">{t('amtMax')}</span><input type="number" className="o-input" value={f.max} onChange={set('max')} placeholder="99999" /></label>
                 <label><span className="o-flabel">{t('color')}</span>
-                  <select className="o-input" value={f.color} onChange={set('color')}><option value="">{t('all')}</option>{choices.color.map((c) => <option key={c}>{c}</option>)}</select></label>
+                  <Dropdown value={f.color} onChange={setV('color')} emptyLabel={t('all')}
+                    options={choices.color.map((c) => ({ value: c, label: <span className="inline-flex items-center gap-2"><span className="h-3 w-3 rounded-full border border-line2" style={{ background: colorHex(c) }} />{c}</span> }))} /></label>
               </div>
             )}
           </div>
